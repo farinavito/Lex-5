@@ -1,0 +1,68 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.11;
+
+/// @title This smart contract enables you to lock your funds for the time you choose
+/// @author Farina Vito
+
+contract LockMyFunds {
+
+    struct Funds{
+        address signee;
+        uint256 balances;
+        uint256 lockedUpTime;
+    }
+
+    /// @notice Using against re-entrancy
+    uint16 internal locked = 1;
+
+    /// @notice Used to increase the id of the agreements in the "createAgreements" function
+    uint numAgreement = 1;
+
+    /// @notice Doesn't allow reentrance attack
+    modifier noReentrant() {
+        require(locked == 1, "No re-entrancy");
+        locked = 2;
+        _;
+        locked = 1;
+    }
+
+    /// @notice A unique identifier of the agreement. The same as the id.
+    mapping(uint256 => Funds) public exactSafe;
+
+    /// @notice Storing the id's of the safes that the signee has created
+    mapping(address => uint[]) public mySafes;
+
+    /// @notice After other event than Terminated happens, emit it and send a message
+    event NotifyUser(string message);
+
+    function deposit(uint256 _amount, uint256 _lockTime) external {
+        //increment the agreement id
+        uint256 agreementId = numAgreement++;
+        //initialize a new safe
+        Funds storage newSafe = exactSafe[agreementId];
+        //initialize the variable to msg.sender
+        newSafe.signee = msg.sender;
+        //add how much you want to lock
+        newSafe.balances = _amount;
+        //add how long you want to lock it for
+        newSafe.lockedUpTime = block.timestamp + _lockTime;
+        //storing the ids of the safes and connecting them to msg.sender's address so we can display them to the frontend
+        mySafes[msg.sender].push(agreementId);
+    }
+
+    function withdraw(uint256 _id, uint256 _quantity) external noReentrant{
+        //checking if the signee is the same as the msg.sender
+        require(exactSafe[_id].signee == msg.sender);
+        //checking if the lock up time has ended
+        require(exactSafe[_id].lockedUpTime >= block.timestamp);
+        //checking if the balance is big enough 
+        require(exactSafe[_id].balances >= _quantity);
+        //send the funds
+        (bool sent, ) = exactSafe[_id].signee.call{value:_quantity}("");
+        require(sent, "Failed to send Ether");
+        //reduce the balance
+        exactSafe[_id].balances -= _quantity;
+        //emit the event
+        emit NotifyUser("The amount sent is lower than in the agreement");  
+    }
+}
