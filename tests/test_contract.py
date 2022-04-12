@@ -32,3 +32,7 @@ def test_exactSafe_id(deploy):
 def test_exactSafe_signee(deploy):
     '''check if the first signe of the safe is accounts[9]'''
     assert deploy.exactSafe(agreements_number)[1] == accounts[depositSignee]
+
+def test_exactSafe_balances(deploy):
+    '''check if the first balances of the safe is depositAmount'''
+    assert deploy.exactSafe(agreements_number)[2] == depositAmount
