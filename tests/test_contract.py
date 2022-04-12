@@ -29,7 +29,7 @@ def deploy_newsafe(deploy):
     return deploy.deposit(depositAmount, depositLockTime, {'from': accounts[depositSignee]})
 
 chain = Chain()
-deploymentTime = chain.time()
+deploymentTime2 = chain.time()
 @pytest.fixture(autouse=True)
 def deploy_newsafe2(deploy):
     return deploy.deposit(depositAmount2, depositLockTime2, {'from': accounts[depositSignee2]})
@@ -53,7 +53,7 @@ def test_exactSafe_balances(deploy):
 
 def test_exactSafe_lockedUpTime(deploy):
     '''check if the first lockedUpTime of the safe is depositAmount'''
-    assert deploy.exactSafe(agreements_number)[3] == depositLockTime + deploymentTime + 9
+    assert deploy.exactSafe(agreements_number)[3] == depositLockTime + deploymentTime + 13
 
 
 
@@ -61,3 +61,18 @@ def test_exactSafe_lockedUpTime(deploy):
 
 
 
+def test_exactSafe_id_2(deploy):
+    '''check if the first id of the safe is one'''
+    assert deploy.exactSafe(agreements_number2)[0] == str(agreements_number2)
+
+def test_exactSafe_signee_2(deploy):
+    '''check if the first signe of the safe is accounts[9]'''
+    assert deploy.exactSafe(agreements_number2)[1] == accounts[depositSignee2]
+
+def test_exactSafe_balances_2(deploy):
+    '''check if the first balances of the safe is depositAmount'''
+    assert deploy.exactSafe(agreements_number2)[2] == depositAmount2
+
+def test_exactSafe_lockedUpTime_2(deploy):
+    '''check if the first lockedUpTime of the safe is depositAmount'''
+    assert deploy.exactSafe(agreements_number2)[3] == depositLockTime2 + deploymentTime2 + 18
