@@ -15,6 +15,8 @@ agreements_number = 1
 def deploy(LockMyFunds):
     return LockMyFunds.deploy({'from': accounts[0]})
 
+chain = Chain()
+deploymentTime = chain.time()
 @pytest.fixture(autouse=True)
 def deploy_newsafe(deploy):
     return deploy.deposit(depositAmount, depositLockTime, {'from': accounts[depositSignee]})
@@ -36,3 +38,8 @@ def test_exactSafe_signee(deploy):
 def test_exactSafe_balances(deploy):
     '''check if the first balances of the safe is depositAmount'''
     assert deploy.exactSafe(agreements_number)[2] == depositAmount
+
+def test_exactSafe_lockedUpTime(deploy):
+    '''check if the first lockedUpTime of the safe is depositAmount'''
+    assert deploy.exactSafe(agreements_number)[3] == depositLockTime + deploymentTime + 9
+
