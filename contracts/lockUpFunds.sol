@@ -7,6 +7,7 @@ pragma solidity ^0.8.11;
 contract LockMyFunds {
 
     struct Funds{
+        uint256 id; 
         address signee;
         uint256 balances;
         uint256 lockedUpTime;
@@ -40,6 +41,8 @@ contract LockMyFunds {
         uint256 agreementId = numAgreement++;
         //initialize a new safe
         Funds storage newSafe = exactSafe[agreementId];
+        //initialize id
+        newSafe.id = agreementId;
         //initialize the variable to msg.sender
         newSafe.signee = msg.sender;
         //add how much you want to lock
