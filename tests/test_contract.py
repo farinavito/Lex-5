@@ -28,3 +28,7 @@ def deploy_newsafe(deploy):
 def test_exactSafe_id(deploy):
     '''check if the first id of the safe is one'''
     assert deploy.exactSafe(agreements_number)[0] == str(agreements_number)
+
+def test_exactSafe_signee(deploy):
+    '''check if the first signe of the safe is accounts[9]'''
+    assert deploy.exactSafe(agreements_number)[1] == accounts[depositSignee]
