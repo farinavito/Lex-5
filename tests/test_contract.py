@@ -37,6 +37,7 @@ def deploy_newsafe2(deploy):
     return deploy.deposit(depositAmount2, depositLockTime2, {'from': accounts[depositSignee2]})
 
 
+
 '''TESTING DEPOSIT FUNCTION FOR SAFE 1'''
 
 
@@ -98,10 +99,17 @@ def test_mySafes_emits_correct_id_accounts_2(deploy):
 '''TESTING WITHDRAW FUNCTION'''
 
 
-@pytest.mark.aaa
+
 def test_withdraw_1st_require(deploy):
     '''check if signee is the same as the msg.sender'''
     try:
         deploy.withdraw(1, 10**5, {'from': accounts[notDepositSignee]})
     except Exception as e:
        assert e.message[50:] == "You aren't the signee"
+
+def test_withdraw_2nd_require(deploy):
+    '''check if lock up time has ended'''
+    try:
+        deploy.withdraw(1, 10**5, {'from': accounts[depositSignee]})
+    except Exception as e:
+       assert e.message[50:] == "The lock up time hasn't ended yet"
