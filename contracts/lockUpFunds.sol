@@ -55,11 +55,11 @@ contract LockMyFunds {
 
     function withdraw(uint256 _id, uint256 _quantity) external noReentrant{
         //checking if the signee is the same as the msg.sender
-        require(exactSafe[_id].signee == msg.sender);
+        require(exactSafe[_id].signee == msg.sender, "You aren't the signee");
         //checking if the lock up time has ended
-        require(exactSafe[_id].lockedUpTime >= block.timestamp);
+        require(exactSafe[_id].lockedUpTime >= block.timestamp, "The lock up time hasn't ended yet");
         //checking if the balance is big enough 
-        require(exactSafe[_id].balances >= _quantity);
+        require(exactSafe[_id].balances >= _quantity, "Not enough funds");
         //send the funds
         (bool sent, ) = exactSafe[_id].signee.call{value:_quantity}("");
         require(sent, "Failed to send Ether");
