@@ -61,11 +61,14 @@ contract LockMyFunds {
         //checking if the balance is big enough 
         require(exactSafe[_id].balances >= _quantity, "Not enough funds");
         //send the funds
-        (bool sent, ) = exactSafe[_id].signee.call{value:_quantity}("");
+        (bool sent, ) = msg.sender.call{value: _quantity}("");
         require(sent, "Failed to send Ether");
         //reduce the balance
         exactSafe[_id].balances -= _quantity;
         //emit the event
         emit NotifyUser("The amount sent is lower than in the agreement");  
     }
+
+    fallback() external {}
+    receive() external payable {}
 }

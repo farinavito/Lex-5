@@ -127,3 +127,13 @@ def test_withdraw_3rd_require(deploy, sleep_time, amount_sent):
         deploy.withdraw(agreements_number, amount_sent, {'from': accounts[depositSignee]})
     except Exception as e:
        assert e.message[50:] == "Not enough funds"
+
+@pytest.mark.parametrize("sleep_time", [sleeping_time[0], sleeping_time[1], sleeping_time[2], sleeping_time[3]])
+def test_withdraw_failed_to_sent_eth(deploy, sleep_time):
+    '''check if we failed to send eth'''
+    try:
+        chain = Chain()
+        chain.sleep(sleep_time)
+        deploy.withdraw(agreements_number, depositAmount, {'from': accounts[depositSignee]})
+    except Exception as e:
+       assert e.message[50:] == "Failed to send Ether"
