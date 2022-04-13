@@ -50,7 +50,7 @@ def test_exactSafe_id(deploy):
     assert deploy.exactSafe(agreements_number)[0] == str(agreements_number)
 
 def test_exactSafe_signee(deploy):
-    '''check if the first signe of the safe is accounts[9]'''
+    '''check if the first signee of the safe is accounts[9]'''
     assert deploy.exactSafe(agreements_number)[1] == accounts[depositSignee]
 
 def test_exactSafe_balances(deploy):
@@ -92,6 +92,11 @@ def test_exactSafe_lockedUpTime_2(deploy):
 def test_mySafes_emits_correct_id_accounts_1(deploy):
     '''check if the mapping mySafes emits correct agreementId for the first element in the mapping of address signee'''
     assert deploy.mySafes(accounts[depositSignee], 0) == '1'
+
+def test_mySafes_emits_correct_id_accounts_1_2nd(deploy):
+    '''check if the mapping mySafes emits correct agreementId for the second element in the mapping of address signee'''
+    deploy.deposit(depositAmount, depositLockTime, {'from': accounts[depositSignee]})
+    assert deploy.mySafes(accounts[depositSignee], 1) == '3'
 
 def test_mySafes_emits_correct_id_accounts_2(deploy):
     '''check if the mapping mySafes is returning correctly the ids'''
