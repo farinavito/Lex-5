@@ -6,8 +6,11 @@ from brownie import accounts
 from brownie.network import rpc
 from brownie.network.state import Chain
 
+sleeping_time = [86400, 604800, 2629743, 31556926]
+
 #new safe -> 1
 depositAmount = 10**6
+moreThanDepoitAmount = [10**7, 10**8, 10**9]
 depositLockTime = 86400 #1day
 depositSignee = 9
 notDepositSignee = 8
@@ -103,13 +106,24 @@ def test_mySafes_emits_correct_id_accounts_2(deploy):
 def test_withdraw_1st_require(deploy):
     '''check if signee is the same as the msg.sender'''
     try:
-        deploy.withdraw(1, 10**5, {'from': accounts[notDepositSignee]})
+        deploy.withdraw(agreements_number, depositAmount, {'from': accounts[notDepositSignee]})
     except Exception as e:
        assert e.message[50:] == "You aren't the signee"
 
 def test_withdraw_2nd_require(deploy):
     '''check if lock up time has ended'''
     try:
-        deploy.withdraw(1, 10**5, {'from': accounts[depositSignee]})
+        deploy.withdraw(agreements_number, depositAmount, {'from': accounts[depositSignee]})
     except Exception as e:
        assert e.message[50:] == "The lock up time hasn't ended yet"
+
+@pytest.mark.parametrize("sleep_time", [sleeping_time[0], sleeping_time[1], sleeping_time[2], sleeping_time[3]])
+@pytest.mark.parametrize("amount_sent", [moreThanDepoitAmount[0], moreThanDepoitAmount[1], moreThanDepoitAmount[2]])
+def test_withdraw_3rd_require(deploy, sleep_time, amount_sent):
+    '''check if the balance is big enough'''
+    try:
+        chain = Chain()
+        chain.sleep(sleep_time)
+        deploy.withdraw(agreements_number, amount_sent, {'from': accounts[depositSignee]})
+    except Exception as e:
+       assert e.message[50:] == "Not enough funds"
