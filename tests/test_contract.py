@@ -137,3 +137,15 @@ def test_withdraw_failed_to_sent_eth(deploy, sleep_time):
         deploy.withdraw(agreements_number, depositAmount, {'from': accounts[depositSignee]})
     except Exception as e:
        assert e.message[50:] == "Failed to send Ether"
+
+def test_withdraw_all(deploy):
+    '''check if the balance is zero when everything is withdrawn'''
+    pass
+
+def test_withdraw_less(deploy):
+    '''check if the balance is reduced when an amount is withdrawn'''
+    pass
+
+def test_withdraw_emit_event(deploy):
+    '''check if the event is emited when we withdraw the balance'''
+    pass
