@@ -34,7 +34,7 @@ contract LockMyFunds {
     mapping(address => uint[]) public mySafes;
 
     /// @notice After other event than Terminated happens, emit it and send a message
-    event NotifyUser(string message);
+    event NotifyUser(uint256 quantity);
 
     function deposit(uint256 _lockTime) external payable {
         //increment the agreement id
@@ -66,7 +66,7 @@ contract LockMyFunds {
         //reduce the balance
         exactSafe[_id].balances -= _quantity;
         //emit the event
-        emit NotifyUser("The amount sent is lower than in the agreement");  
+        emit NotifyUser(_quantity);  
     }
 
     fallback() external {}

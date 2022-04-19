@@ -140,7 +140,7 @@ def test_withdraw_all(deploy, sleep_time):
     chain.sleep(sleep_time)
     deploy.withdraw(agreements_number, depositAmount, {'from': accounts[depositSignee]})
     assert deploy.exactSafe(agreements_number)[2] == 0
-@pytest.mark.aaa    
+  
 @pytest.mark.parametrize("sleep_time", [sleeping_time[0], sleeping_time[1], sleeping_time[2], sleeping_time[3]])
 @pytest.mark.parametrize("less_amount", [depositAmount - 10**2, depositAmount - 10**3, depositAmount - 10**4])
 def test_withdraw_less(deploy, sleep_time, less_amount):
@@ -150,8 +150,12 @@ def test_withdraw_less(deploy, sleep_time, less_amount):
     chain.sleep(sleep_time)
     deploy.withdraw(agreements_number, less_amount, {'from': accounts[depositSignee]})
     assert deploy.exactSafe(agreements_number)[2] == funds - less_amount
-    pass
-
-def test_withdraw_emit_event(deploy):
+@pytest.mark.aaa
+@pytest.mark.parametrize("sleep_time", [sleeping_time[0], sleeping_time[1], sleeping_time[2], sleeping_time[3]])
+@pytest.mark.parametrize("_amount", [depositAmount, depositAmount - 10**2, depositAmount - 10**3, depositAmount - 10**4])
+def test_withdraw_emit_event(deploy, sleep_time, _amount):
     '''check if the event is emited when we withdraw the balance'''
-    pass
+    chain = Chain()
+    chain.sleep(sleep_time)
+    function_initialize = deploy.withdraw(agreements_number, _amount, {'from': accounts[depositSignee]})
+    assert function_initialize.events[0][0]['quantity'] == _amount
