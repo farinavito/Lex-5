@@ -53,7 +53,7 @@ contract LockMyFunds {
         mySafes[msg.sender].push(agreementId);
     }
 
-    function withdraw(uint256 _id, uint256 _quantity) external noReentrant{
+    function withdraw(uint256 _id, uint256 _quantity) external payable noReentrant{
         //checking if the signee is the same as the msg.sender
         require(exactSafe[_id].signee == msg.sender, "You aren't the signee");
         //checking if the lock up time has ended
