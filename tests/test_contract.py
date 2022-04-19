@@ -142,10 +142,15 @@ def test_withdraw_failed_to_sent_eth(deploy, sleep_time):
         deploy.withdraw(agreements_number, depositAmount, {'from': accounts[depositSignee]})
     except Exception as e:
        assert e.message[50:] == "Failed to send Ether"
-
-def test_withdraw_all(deploy):
+@pytest.mark.aaa
+@pytest.mark.parametrize("sleep_time", [sleeping_time[0], sleeping_time[1], sleeping_time[2], sleeping_time[3]])
+def test_withdraw_all(deploy, sleep_time):
     '''check if the balance is zero when everything is withdrawn'''
-    pass
+    chain = Chain()
+    chain.sleep(sleep_time)
+    deploy.withdraw(agreements_number, depositAmount, {'from': accounts[depositSignee]})
+    assert deploy.exactSafe(agreements_number2)[2] == 0
+    
 
 def test_withdraw_less(deploy):
     '''check if the balance is reduced when an amount is withdrawn'''

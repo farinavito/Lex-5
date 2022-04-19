@@ -36,7 +36,7 @@ contract LockMyFunds {
     /// @notice After other event than Terminated happens, emit it and send a message
     event NotifyUser(string message);
 
-    function deposit(uint256 _amount, uint256 _lockTime) external {
+    function deposit(uint256 _lockTime) external payable {
         //increment the agreement id
         uint256 agreementId = numAgreement++;
         //initialize a new safe
@@ -46,7 +46,7 @@ contract LockMyFunds {
         //initialize the variable to msg.sender
         newSafe.signee = msg.sender;
         //add how much you want to lock
-        newSafe.balances = _amount;
+        newSafe.balances = msg.value;
         //add how long you want to lock it for
         newSafe.lockedUpTime = block.timestamp + _lockTime;
         //storing the ids of the safes and connecting them to msg.sender's address so we can display them to the frontend
