@@ -31,13 +31,13 @@ chain = Chain()
 deploymentTime = chain.time()
 @pytest.fixture(autouse=True)
 def deploy_newsafe(deploy):
-    return deploy.deposit(depositAmount, depositLockTime, {'from': accounts[depositSignee]})
+    return deploy.deposit(depositLockTime, {'from': accounts[depositSignee], 'value': depositAmount})
 
 chain = Chain()
 deploymentTime2 = chain.time()
 @pytest.fixture(autouse=True)
 def deploy_newsafe2(deploy):
-    return deploy.deposit(depositAmount2, depositLockTime2, {'from': accounts[depositSignee2]})
+    return deploy.deposit(depositLockTime2, {'from': accounts[depositSignee2], 'value': depositAmount2})
 
 
 
@@ -95,7 +95,7 @@ def test_mySafes_emits_correct_id_accounts_1(deploy):
 
 def test_mySafes_emits_correct_id_accounts_1_2nd(deploy):
     '''check if the mapping mySafes emits correct agreementId for the second element in the mapping of address signee'''
-    deploy.deposit(depositAmount, depositLockTime, {'from': accounts[depositSignee]})
+    deploy.deposit(depositLockTime, {'from': accounts[depositSignee], 'value': depositAmount})
     assert deploy.mySafes(accounts[depositSignee], 1) == '3'
 
 def test_mySafes_emits_correct_id_accounts_2(deploy):
