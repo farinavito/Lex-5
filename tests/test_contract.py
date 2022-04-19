@@ -61,6 +61,13 @@ def test_exactSafe_lockedUpTime(deploy):
     '''check if the first lockedUpTime of the safe is depositAmount'''
     assert deploy.exactSafe(agreements_number)[3] == depositLockTime + deploymentTime + 13
 
+def test_deposit_0(deploy):
+    '''Check if the require statement works correctly'''
+    try:
+        deploy.deposit(depositLockTime, {'from': accounts[depositSignee], 'value': 0})
+    except Exception as e:
+       assert e.message[50:] == "Deposit more than 0"
+    
 
 
 '''TESTING DEPOSIT FUNCTION FOR SAFE 2'''
@@ -150,7 +157,7 @@ def test_withdraw_less(deploy, sleep_time, less_amount):
     chain.sleep(sleep_time)
     deploy.withdraw(agreements_number, less_amount, {'from': accounts[depositSignee]})
     assert deploy.exactSafe(agreements_number)[2] == funds - less_amount
-@pytest.mark.aaa
+
 @pytest.mark.parametrize("sleep_time", [sleeping_time[0], sleeping_time[1], sleeping_time[2], sleeping_time[3]])
 @pytest.mark.parametrize("_amount", [depositAmount, depositAmount - 10**2, depositAmount - 10**3, depositAmount - 10**4])
 def test_withdraw_emit_event(deploy, sleep_time, _amount):

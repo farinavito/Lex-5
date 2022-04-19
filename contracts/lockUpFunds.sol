@@ -37,6 +37,8 @@ contract LockMyFunds {
     event NotifyUser(uint256 quantity);
 
     function deposit(uint256 _lockTime) external payable {
+        //deposit more than 0
+        require(msg.value > 0, "Please deposit more than 0");
         //increment the agreement id
         uint256 agreementId = numAgreement++;
         //initialize a new safe
