@@ -33,6 +33,7 @@ deploymentTime = chain.time()
 def deploy_newsafe(deploy):
     return deploy.deposit(depositLockTime, {'from': accounts[depositSignee], 'value': depositAmount})
 
+
 chain = Chain()
 deploymentTime2 = chain.time()
 @pytest.fixture(autouse=True)
@@ -59,14 +60,14 @@ def test_exactSafe_balances(deploy):
 
 def test_exactSafe_lockedUpTime(deploy):
     '''check if the first lockedUpTime of the safe is depositAmount'''
-    assert deploy.exactSafe(agreements_number)[3] == depositLockTime + deploymentTime + 13
+    assert deploy.exactSafe(agreements_number)[3] - 9 == depositLockTime + deploymentTime 
 
 def test_deposit_0(deploy):
     '''Check if the require statement works correctly'''
     try:
         deploy.deposit(depositLockTime, {'from': accounts[depositSignee], 'value': 0})
     except Exception as e:
-       assert e.message[50:] == "Deposit more than 0"
+       assert e.message[50:] == "Please deposit more than 0"
     
 
 
@@ -88,7 +89,7 @@ def test_exactSafe_balances_2(deploy):
 
 def test_exactSafe_lockedUpTime_2(deploy):
     '''check if the first lockedUpTime of the safe is depositAmount'''
-    assert deploy.exactSafe(agreements_number2)[3] == depositLockTime2 + deploymentTime2 + 18
+    assert deploy.exactSafe(agreements_number2)[3] == depositLockTime2 + deploymentTime2 + 11
 
 
 
