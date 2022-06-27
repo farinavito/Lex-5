@@ -66,6 +66,7 @@ def test_deposit_0(deploy):
     '''Check if the require statement works correctly'''
     try:
         deploy.deposit(depositLockTime, {'from': accounts[depositSignee], 'value': 0})
+        pytest.fail("The try-except concept has failed in test_deposit_0")
     except Exception as e:
        assert e.message[50:] == "Please deposit more than 0"
     
@@ -120,6 +121,7 @@ def test_withdraw_1st_require(deploy):
     '''check if signee is the same as the msg.sender'''
     try:
         deploy.withdraw(agreements_number, depositAmount, {'from': accounts[notDepositSignee]})
+        pytest.fail("The try-except concept has failed in test_withdraw_1st_require")
     except Exception as e:
        assert e.message[50:] == "You aren't the signee"
 
@@ -127,6 +129,7 @@ def test_withdraw_2nd_require(deploy):
     '''check if lock up time has ended'''
     try:
         deploy.withdraw(agreements_number, depositAmount, {'from': accounts[depositSignee]})
+        pytest.fail("The try-except concept has failed in test_withdraw_2nd_require")
     except Exception as e:
        assert e.message[50:] == "The lock up time hasn't ended yet"
 
@@ -138,6 +141,7 @@ def test_withdraw_3rd_require(deploy, sleep_time, amount_sent):
         chain = Chain()
         chain.sleep(sleep_time)
         deploy.withdraw(agreements_number, amount_sent, {'from': accounts[depositSignee]})
+        pytest.fail("The try-except concept has failed in test_withdraw_3rd_require")
     except Exception as e:
        assert e.message[50:] == "Not enough funds"
 
