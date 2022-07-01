@@ -34,7 +34,7 @@ contract LockMyFunds {
     mapping(address => uint[]) public mySafes;
 
     /// @notice Storing the amount of the caller's safes
-    mapping(address => uint256) public myNumSafes;
+    mapping(address => uint256) internal myNumSafes;
 
     /// @notice After other event than Terminated happens, emit it and send a message
     event NotifyUser(uint256 quantity);
@@ -74,6 +74,13 @@ contract LockMyFunds {
         exactSafe[_id].balances -= _quantity;
         //emit the event
         emit NotifyUser(_quantity);  
+    }
+
+    function getMyNumSafes() external view returns(uint256){
+        //checking if the caller has some Safes
+        require(myNumSafes[msg.sender] > 0, "You don't have any depozits");
+        //return the number of safes that the caller has
+        return myNumSafes[msg.sender];
     }
 
     fallback() external {}
