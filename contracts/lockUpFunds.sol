@@ -33,6 +33,9 @@ contract LockMyFunds {
     /// @notice Storing the id's of the safes that the signee has created
     mapping(address => uint[]) public mySafes;
 
+    /// @notice Storing the amount of the caller's safes
+    mapping(address => uint256) public myNumSafes;
+
     /// @notice After other event than Terminated happens, emit it and send a message
     event NotifyUser(uint256 quantity);
 
@@ -53,6 +56,8 @@ contract LockMyFunds {
         newSafe.lockedUpTime = block.timestamp + _lockTime;
         //storing the ids of the safes and connecting them to msg.sender's address so we can display them to the frontend
         mySafes[msg.sender].push(agreementId);
+        //incrementing the number of the caller's safes
+        myNumSafes[msg.sender] += 1;
     }
 
     function withdraw(uint256 _id, uint256 _quantity) external payable noReentrant{
