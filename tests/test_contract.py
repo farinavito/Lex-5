@@ -186,3 +186,11 @@ def test_getMyNumSafes_initialize_to_zero(deploy, users):
         pytest.fail("The try-except concept has failed in test_withdraw_3rd_require")
     except Exception as e:
        assert e.message[50:] == "You don't have any depozits"
+@pytest.mark.aaa
+@pytest.mark.parametrize("users", [7, 6, 5, 4, 3])
+@pytest.mark.parametrize("loops", [2, 3, 4, 5, 6])
+def test_getMyNumSafes_numbers(deploy, users, loops):
+    '''check if the caller's getMyNumSafes returnes correct number'''
+    for _ in range(1, loops):
+        deploy.deposit(depositLockTime, {'from': accounts[users], 'value': depositAmount})
+    deploy.getMyNumSafes({'from': accounts[users]}) == loops - 1
